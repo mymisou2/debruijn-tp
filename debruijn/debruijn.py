@@ -12,7 +12,7 @@
 #    http://www.gnu.org/licenses/gpl-3.0.html
 
 """Perform assembly based on debruijn graph."""
-from operator import itemgetter
+# from operator import itemgetter
 import argparse
 import os
 import sys
@@ -153,7 +153,7 @@ def get_contigs(graph, starting_nodes, ending_nodes):
                 # Create a path with all the element
                 for element in concatention:
                     path += element
-            if path != "":
+            if path:
                 # Add the tuple contig  with distance
                 tuple.append((path, distances[start_node][end_node]+2))
     return tuple
@@ -188,11 +188,11 @@ def path_average_weight(graph, path):
             try:
                 moyenne += graph[path[indice_node]][path[indice_node + 1]]['weight']
                 nb_arcs += 1
-            except:
+            except TypeError:
                 pass
     try:
         moyenne = moyenne/nb_arcs
-    except:
+    except TypeError:
         return 0
     return moyenne
 
@@ -309,11 +309,13 @@ def simplify_bubbles(graph):
                             ancestor = nx.algorithms.lowest_common_ancestor(graph, pred[i], pred[j])
                             # On recupère un graph nettoyé de la bulle
                             graph = solve_bubble(graph, ancestor, node)
-                        except:
+                        except (ValueError, Exception):
                             pass
 
     # On remet les noeuds supprimés
-    [graph.add_node(node) for node in nodes if node not in graph.nodes]
+    for node in nodes:
+        if node not in graph.nodes:
+            graph.add_node(node)
     return graph
 
 #################################################################
@@ -325,7 +327,8 @@ def solve_entry_tips(graph, starting_nodes):
     # Add a temporary node at the end to create a bull
     graph.add_node(tmp_node)
     # Add edges between the temporary node and starting nodes
-    [graph.add_edge(tmp_node, node, weight=0) for node in starting_nodes]
+    for node in starting_nodes:
+        graph.add_edge(tmp_node, node, weight=0)
     graph = simplify_bubbles(graph)
     # remove the temporary node
     graph.remove_node(tmp_node)
@@ -337,7 +340,8 @@ def solve_out_tips(graph, ending_nodes):
     # Add a temporary node at the end to create a bull
     graph.add_node(tmp_node)
     # Add edges between the  endings nodes and temporary node
-    [graph.add_edge(node, tmp_node, weight=0) for node in ending_nodes]
+    for node in ending_nodes:
+        graph.add_edge(node, tmp_node, weight=0)
     graph = simplify_bubbles(graph)
     # remove the temporary node
     graph.remove_node(tmp_node)
@@ -347,7 +351,7 @@ def solve_out_tips(graph, ending_nodes):
 def draw_graph(graph, graphimg_file):
     """Draw the graph
     """
-    fig, ax = plt.subplots()
+    plt.pyplot.subplots()
     elarge = [(u, v) for (u, v, d) in graph.edges(data=True) if d['weight'] > 3]
     #print(elarge)
     esmall = [(u, v) for (u, v, d) in graph.edges(data=True) if d['weight'] <= 3]
@@ -361,7 +365,7 @@ def draw_graph(graph, graphimg_file):
                            edge_color='b', style='dashed')
     #nx.draw_networkx(graph, pos, node_size=10, with_labels=False)
     # save image
-    plt.savefig(graphimg_file)
+    plt.pyplot.savefig(graphimg_file)
 
 
 #==============================================================
