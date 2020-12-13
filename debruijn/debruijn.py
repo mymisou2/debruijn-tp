@@ -22,8 +22,6 @@ import statistics
 import matplotlib as plt
 import networkx as nx
 
-
-
 __author__ = "Myriam Mendli"
 __copyright__ = "EISTI"
 __credits__ = ["Myriam Mendli"]
@@ -31,7 +29,7 @@ __license__ = "GPL"
 __version__ = "1.0.0"
 __maintainer__ = "Myriam Mendli"
 __email__ = "mendlimyri@eisti.eu"
-__status__ = "Developpement"
+__status__ = "Rendu"
 
 def isfile(path):
     """
