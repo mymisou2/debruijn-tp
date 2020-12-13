@@ -29,7 +29,7 @@ __license__ = "GPL"
 __version__ = "1.0.0"
 __maintainer__ = "Myriam Mendli"
 __email__ = "mendlimyri@eisti.eu"
-__status__ = "Rendu"
+__status__ = "Rendu final"
 
 def isfile(path):
     """
